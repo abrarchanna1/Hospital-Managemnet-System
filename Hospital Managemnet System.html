@@ -1,0 +1,967 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CarePoint | Hospital Management</title>
+
+<style>
+:root {
+    --primary: #087f8c;
+    --dark: #12313d;
+    --bg: #f3f7fa;
+    --white: #fff;
+    --muted: #718096;
+    --border: #e1eaf0;
+    --green: #138a62;
+    --red: #d94357;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: "Segoe UI", Arial, sans-serif;
+    background: var(--bg);
+    color: #203746;
+}
+
+.app {
+    display: flex;
+    min-height: 100vh;
+}
+
+.sidebar {
+    width: 235px;
+    flex-shrink: 0;
+    padding: 25px 16px;
+    background: var(--dark);
+    color: white;
+}
+
+.brand {
+    font-size: 23px;
+    font-weight: 800;
+    padding: 0 8px 32px;
+}
+
+.brand span {
+    color: #5ce1ce;
+}
+
+.nav-label {
+    font-size: 11px;
+    color: #9bb5c0;
+    letter-spacing: 1.5px;
+    padding: 10px;
+}
+
+.nav {
+    width: 100%;
+    padding: 13px;
+    margin: 4px 0;
+    text-align: left;
+    color: #c6d8df;
+    background: transparent;
+    border: 0;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.nav:hover, .nav.active {
+    color: white;
+    background: #24505b;
+}
+
+.sidebar-info {
+    margin-top: 35px;
+    padding: 14px;
+    border: 1px solid #42616c;
+    border-radius: 10px;
+    font-size: 12px;
+    line-height: 1.8;
+    color: #c6d8df;
+}
+
+main {
+    min-width: 0;
+    flex: 1;
+    padding: 30px;
+}
+
+.topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 25px;
+}
+
+h1 {
+    font-size: 28px;
+    margin: 0 0 7px;
+}
+
+h2 {
+    font-size: 18px;
+    margin: 0 0 18px;
+}
+
+p {
+    line-height: 1.5;
+}
+
+.muted {
+    color: var(--muted);
+    font-size: 13px;
+}
+
+button, input, select, textarea {
+    font: inherit;
+}
+
+.btn {
+    padding: 11px 15px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: white;
+    cursor: pointer;
+}
+
+.btn-primary {
+    color: white;
+    background: var(--primary);
+    border-color: var(--primary);
+}
+
+.stats {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 17px;
+}
+
+.card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 13px;
+    padding: 21px;
+    box-shadow: 0 4px 15px #20374608;
+    min-width: 0;
+}
+
+.stat-label {
+    color: var(--muted);
+    font-size: 13px;
+}
+
+.stat-value {
+    font-size: 32px;
+    font-weight: 800;
+    margin: 12px 0 6px;
+    color: var(--dark);
+}
+
+.stat-icon {
+    float: right;
+    background: #e1f6f3;
+    color: var(--primary);
+    border-radius: 10px;
+    padding: 10px;
+    font-size: 20px;
+}
+
+.content-grid {
+    display: grid;
+    grid-template-columns: 1.1fr 1fr;
+    gap: 18px;
+    margin-top: 20px;
+}
+
+.section {
+    margin-top: 20px;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0 15px;
+}
+
+label {
+    display: block;
+    font-size: 13px;
+    margin: 10px 0 6px;
+    color: #425969;
+}
+
+input, select, textarea {
+    width: 100%;
+    padding: 11px;
+    border: 1px solid #d6e1e8;
+    border-radius: 7px;
+    background: white;
+    color: #203746;
+}
+
+input:focus, select:focus, textarea:focus {
+    outline: 2px solid #8bdad3;
+    border-color: var(--primary);
+}
+
+.form-actions {
+    display: flex;
+    gap: 9px;
+    margin-top: 18px;
+    flex-wrap: wrap;
+}
+
+.table-controls {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 16px;
+}
+
+.search {
+    flex: 1;
+    min-width: 180px;
+}
+
+.table-wrap {
+    overflow-x: auto;
+}
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+    min-width: 650px;
+}
+
+th, td {
+    text-align: left;
+    padding: 14px 10px;
+    border-bottom: 1px solid var(--border);
+    font-size: 13px;
+}
+
+th {
+    color: var(--muted);
+    background: #f8fbfc;
+}
+
+.pill {
+    display: inline-block;
+    border-radius: 20px;
+    padding: 5px 9px;
+    background: #e2f7ef;
+    color: #087c55;
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.action {
+    padding: 7px 9px;
+    border: 0;
+    border-radius: 6px;
+    cursor: pointer;
+    margin: 2px;
+}
+
+.delete {
+    background: #fff0f1;
+    color: var(--red);
+}
+
+.edit {
+    background: #eaf3ff;
+    color: #2266ad;
+}
+
+.empty {
+    color: var(--muted);
+    text-align: center;
+    padding: 22px;
+}
+
+.footer {
+    text-align: center;
+    color: var(--muted);
+    font-size: 12px;
+    padding: 30px 0 5px;
+}
+
+[hidden] {
+    display: none !important;
+}
+
+@media (max-width: 1050px) {
+    .stats {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .content-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 650px) {
+    .app {
+        display: block;
+    }
+
+    .sidebar {
+        width: 100%;
+        padding: 15px;
+    }
+
+    .brand {
+        padding-bottom: 15px;
+    }
+
+    .nav-label, .sidebar-info {
+        display: none;
+    }
+
+    .nav {
+        width: auto;
+        display: inline-block;
+        padding: 9px;
+    }
+
+    main {
+        padding: 17px;
+    }
+
+    .topbar {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .stats {
+        grid-template-columns: 1fr;
+    }
+
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+</head>
+
+<body>
+<div class="app">
+
+<aside class="sidebar">
+    <div class="brand">✚ Care<span>Point</span></div>
+
+    <div class="nav-label">MAIN MENU</div>
+    <button class="nav active" data-page="dashboard">▦ Dashboard</button>
+    <button class="nav" data-page="patients">♙ Patients</button>
+    <button class="nav" data-page="doctors">⚕ Doctors</button>
+    <button class="nav" data-page="appointments">▣ Appointments</button>
+
+    <div class="sidebar-info">
+        <strong>CarePoint HMS</strong><br>
+        Hospital Management System<br>
+        Version 1.0 · Student Project
+    </div>
+</aside>
+
+<main>
+    <header class="topbar">
+        <div>
+            <h1 id="pageHeading">Hospital Dashboard</h1>
+            <div class="muted">Manage hospital records in one place.</div>
+        </div>
+        <button class="btn btn-primary" id="addPatientBtn">
+            + Add Patient
+        </button>
+    </header>
+
+    <section class="stats" id="dashboard">
+        <div class="card">
+            <span class="stat-icon">♙</span>
+            <div class="stat-label">Total Patients</div>
+            <div class="stat-value" id="patientCount">0</div>
+            <div class="muted">Registered records</div>
+        </div>
+
+        <div class="card">
+            <span class="stat-icon">⚕</span>
+            <div class="stat-label">Total Doctors</div>
+            <div class="stat-value" id="doctorCount">4</div>
+            <div class="muted">Sample directory</div>
+        </div>
+
+        <div class="card">
+            <span class="stat-icon">▣</span>
+            <div class="stat-label">Appointments</div>
+            <div class="stat-value" id="appointmentCount">0</div>
+            <div class="muted">Saved bookings</div>
+        </div>
+
+        <div class="card">
+            <span class="stat-icon">✓</span>
+            <div class="stat-label">Completed</div>
+            <div class="stat-value" id="completedCount">0</div>
+            <div class="muted">Marked completed</div>
+        </div>
+    </section>
+
+    <section class="content-grid">
+        <div class="card" id="patientFormCard">
+            <h2 id="patientFormTitle">Register New Patient</h2>
+
+            <form id="patientForm">
+                <div class="form-grid">
+                    <div>
+                        <label for="patientName">Patient Name</label>
+                        <input id="patientName" required maxlength="80"
+                               placeholder="Enter full name">
+                    </div>
+
+                    <div>
+                        <label for="patientAge">Age</label>
+                        <input id="patientAge" type="number"
+                               required min="0" max="120"
+                               placeholder="Age">
+                    </div>
+
+                    <div>
+                        <label for="patientGender">Gender</label>
+                        <select id="patientGender" required>
+                            <option value="">Select gender</option>
+                            <option>Male</option>
+                            <option>Female</option>
+                            <option>Other</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label for="patientPhone">Phone</label>
+                        <input id="patientPhone" type="tel"
+                               required maxlength="20"
+                               placeholder="Phone number">
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button class="btn btn-primary" type="submit"
+                            id="patientSubmit">Register Patient</button>
+                    <button class="btn" type="button"
+                            id="cancelEdit" hidden>Cancel</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="card">
+            <h2>Book Appointment</h2>
+
+            <form id="appointmentForm">
+                <label for="appointmentPatient">Patient</label>
+                <select id="appointmentPatient" required>
+                    <option value="">Select patient</option>
+                </select>
+
+                <label for="appointmentDoctor">Doctor</label>
+                <select id="appointmentDoctor" required>
+                    <option value="">Select doctor</option>
+                    <option>Dr. Ahmed — Cardiology</option>
+                    <option>Dr. Sara — Pediatrics</option>
+                    <option>Dr. Ali — Neurology</option>
+                    <option>Dr. Ayesha — Dermatology</option>
+                </select>
+
+                <div class="form-grid">
+                    <div>
+                        <label for="appointmentDate">Date</label>
+                        <input id="appointmentDate" type="date" required>
+                    </div>
+                    <div>
+                        <label for="appointmentTime">Time</label>
+                        <input id="appointmentTime" type="time" required>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button class="btn btn-primary" type="submit">
+                        Book Appointment
+                    </button>
+                </div>
+            </form>
+        </div>
+    </section>
+
+    <section class="card section" id="patients">
+        <h2>Patient Records</h2>
+
+        <div class="table-controls">
+            <input class="search" id="patientSearch"
+                   placeholder="Search name, ID or phone...">
+        </div>
+
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Patient ID</th>
+                        <th>Name</th>
+                        <th>Age</th>
+                        <th>Gender</th>
+                        <th>Phone</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="patientTable"></tbody>
+            </table>
+        </div>
+        <div id="patientEmpty" class="empty">
+            No patients registered yet.
+        </div>
+    </section>
+
+    <section class="card section" id="doctors">
+        <h2>Doctor Directory</h2>
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Doctor</th>
+                        <th>Department</th>
+                        <th>Availability</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Dr. Ahmed</td>
+                        <td>Cardiology</td>
+                        <td><span class="pill">Listed</span></td>
+                    </tr>
+                    <tr>
+                        <td>Dr. Sara</td>
+                        <td>Pediatrics</td>
+                        <td><span class="pill">Listed</span></td>
+                    </tr>
+                    <tr>
+                        <td>Dr. Ali</td>
+                        <td>Neurology</td>
+                        <td><span class="pill">Listed</span></td>
+                    </tr>
+                    <tr>
+                        <td>Dr. Ayesha</td>
+                        <td>Dermatology</td>
+                        <td><span class="pill">Listed</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <p class="muted">These are sample doctor records for demonstration.</p>
+    </section>
+
+    <section class="card section" id="appointments">
+        <h2>Appointment Records</h2>
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Booking ID</th>
+                        <th>Patient</th>
+                        <th>Doctor</th>
+                        <th>Date</th>
+                        <th>Time</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="appointmentTable"></tbody>
+            </table>
+        </div>
+        <div id="appointmentEmpty" class="empty">
+            No appointments booked yet.
+        </div>
+    </section>
+
+    <footer class="footer">
+        CarePoint Hospital Management System · Educational Demo
+    </footer>
+</main>
+</div>
+
+<script>
+const $ = id => document.getElementById(id);
+
+const doctors = [
+    "Dr. Ahmed — Cardiology",
+    "Dr. Sara — Pediatrics",
+    "Dr. Ali — Neurology",
+    "Dr. Ayesha — Dermatology"
+];
+
+let patients = [];
+let appointments = [];
+let editingId = null;
+let nextPatientId = 1;
+let nextAppointmentId = 1;
+
+function loadData(key) {
+    try {
+        const data = JSON.parse(localStorage.getItem(key) || "[]");
+        return Array.isArray(data) ? data : [];
+    } catch {
+        return [];
+    }
+}
+
+patients = loadData("carePointPatients").filter(p =>
+    p && typeof p.id === "string" &&
+    typeof p.name === "string" &&
+    Number.isInteger(p.age) &&
+    p.age >= 0 && p.age <= 120 &&
+    typeof p.gender === "string" &&
+    typeof p.phone === "string"
+);
+
+appointments = loadData("carePointAppointments").filter(a =>
+    a && typeof a.id === "string" &&
+    typeof a.patientId === "string" &&
+    typeof a.doctor === "string" &&
+    typeof a.date === "string" &&
+    typeof a.time === "string" &&
+    ["Booked", "Completed", "Cancelled"].includes(a.status) &&
+    patients.some(p => p.id === a.patientId) &&
+    doctors.includes(a.doctor)
+);
+
+nextPatientId = patients.reduce(
+    (max, p) => Math.max(max, Number(p.id.replace("PT-", "")) || 0), 0
+) + 1;
+
+nextAppointmentId = appointments.reduce(
+    (max, a) => Math.max(max, Number(a.id.replace("AP-", "")) || 0), 0
+) + 1;
+
+function saveData() {
+    try {
+        localStorage.setItem("carePointPatients", JSON.stringify(patients));
+        localStorage.setItem("carePointAppointments", JSON.stringify(appointments));
+        return true;
+    } catch {
+        alert("Data save nahi hua. Browser storage check karein.");
+        return false;
+    }
+}
+
+function makeCell(row, value) {
+    const cell = document.createElement("td");
+    cell.textContent = value;
+    row.appendChild(cell);
+    return cell;
+}
+
+function makeButton(text, className, action) {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.textContent = text;
+    button.className = "action " + className;
+    button.addEventListener("click", action);
+    return button;
+}
+
+function renderPatients() {
+    const query = $("patientSearch").value.trim().toLowerCase();
+    const table = $("patientTable");
+    table.replaceChildren();
+
+    const filtered = patients.filter(p =>
+        (p.id + " " + p.name + " " + p.phone)
+            .toLowerCase().includes(query)
+    );
+
+    filtered.forEach(p => {
+        const row = document.createElement("tr");
+
+        makeCell(row, p.id);
+        makeCell(row, p.name);
+        makeCell(row, p.age);
+        makeCell(row, p.gender);
+        makeCell(row, p.phone);
+
+        const actions = document.createElement("td");
+
+        actions.appendChild(makeButton("Edit", "edit", () => {
+            editingId = p.id;
+            $("patientName").value = p.name;
+            $("patientAge").value = p.age;
+            $("patientGender").value = p.gender;
+            $("patientPhone").value = p.phone;
+            $("patientFormTitle").textContent = "Edit Patient";
+            $("patientSubmit").textContent = "Update Patient";
+            $("cancelEdit").hidden = false;
+            $("patientFormCard").scrollIntoView({ behavior: "smooth" });
+        }));
+
+        actions.appendChild(makeButton("Delete", "delete", () => {
+            if (!confirm("Delete this patient and their appointments?")) {
+                return;
+            }
+
+            const oldPatients = patients;
+            const oldAppointments = appointments;
+
+            patients = patients.filter(item => item.id !== p.id);
+            appointments = appointments.filter(
+                item => item.patientId !== p.id
+            );
+
+            if (!saveData()) {
+                patients = oldPatients;
+                appointments = oldAppointments;
+                return;
+            }
+
+            if (editingId === p.id) resetPatientForm();
+            renderAll();
+        }));
+
+        row.appendChild(actions);
+        table.appendChild(row);
+    });
+
+    $("patientEmpty").hidden = filtered.length > 0;
+    $("patientCount").textContent = patients.length;
+
+    const select = $("appointmentPatient");
+    const previous = select.value;
+    select.replaceChildren();
+
+    const placeholder = document.createElement("option");
+    placeholder.value = "";
+    placeholder.textContent = "Select patient";
+    select.appendChild(placeholder);
+
+    patients.forEach(p => {
+        const option = document.createElement("option");
+        option.value = p.id;
+        option.textContent = p.name + " (" + p.id + ")";
+        select.appendChild(option);
+    });
+
+    if (patients.some(p => p.id === previous)) {
+        select.value = previous;
+    }
+}
+
+function renderAppointments() {
+    const table = $("appointmentTable");
+    table.replaceChildren();
+
+    appointments.forEach(a => {
+        const patient = patients.find(p => p.id === a.patientId);
+        if (!patient) return;
+
+        const row = document.createElement("tr");
+
+        makeCell(row, a.id);
+        makeCell(row, patient.name);
+        makeCell(row, a.doctor);
+        makeCell(row, a.date);
+        makeCell(row, a.time);
+
+        const statusCell = document.createElement("td");
+        const pill = document.createElement("span");
+        pill.className = "pill";
+        pill.textContent = a.status;
+        statusCell.appendChild(pill);
+        row.appendChild(statusCell);
+
+        const actionCell = document.createElement("td");
+
+        if (a.status === "Booked") {
+            actionCell.appendChild(makeButton("Complete", "edit", () => {
+                const old = a.status;
+                a.status = "Completed";
+
+                if (!saveData()) {
+                    a.status = old;
+                    return;
+                }
+
+                renderAll();
+            }));
+
+            actionCell.appendChild(makeButton("Cancel", "delete", () => {
+                if (!confirm("Cancel this appointment?")) return;
+
+                const old = a.status;
+                a.status = "Cancelled";
+
+                if (!saveData()) {
+                    a.status = old;
+                    return;
+                }
+
+                renderAll();
+            }));
+        } else {
+            actionCell.textContent = "—";
+        }
+
+        row.appendChild(actionCell);
+        table.appendChild(row);
+    });
+
+    $("appointmentEmpty").hidden = appointments.length > 0;
+    $("appointmentCount").textContent = appointments.length;
+    $("completedCount").textContent = appointments.filter(
+        a => a.status === "Completed"
+    ).length;
+}
+
+function renderAll() {
+    renderPatients();
+    renderAppointments();
+}
+
+function resetPatientForm() {
+    $("patientForm").reset();
+    editingId = null;
+    $("patientFormTitle").textContent = "Register New Patient";
+    $("patientSubmit").textContent = "Register Patient";
+    $("cancelEdit").hidden = true;
+}
+
+$("patientForm").addEventListener("submit", event => {
+    event.preventDefault();
+
+    const patient = {
+        id: editingId || "PT-" + String(nextPatientId).padStart(4, "0"),
+        name: $("patientName").value.trim(),
+        age: Number($("patientAge").value),
+        gender: $("patientGender").value,
+        phone: $("patientPhone").value.trim()
+    };
+
+    if (!patient.name || !patient.phone ||
+        !Number.isInteger(patient.age) ||
+        patient.age < 0 || patient.age > 120) {
+        alert("Please enter valid patient information.");
+        return;
+    }
+
+    const oldPatients = patients;
+
+    if (editingId) {
+        patients = patients.map(p =>
+            p.id === editingId ? patient : p
+        );
+    } else {
+        patients = [...patients, patient];
+    }
+
+    if (!saveData()) {
+        patients = oldPatients;
+        return;
+    }
+
+    if (!editingId) nextPatientId++;
+
+    resetPatientForm();
+    renderAll();
+});
+
+$("cancelEdit").addEventListener("click", resetPatientForm);
+
+$("patientSearch").addEventListener("input", renderPatients);
+
+$("appointmentForm").addEventListener("submit", event => {
+    event.preventDefault();
+
+    const patientId = $("appointmentPatient").value;
+    const doctor = $("appointmentDoctor").value;
+    const date = $("appointmentDate").value;
+    const time = $("appointmentTime").value;
+
+    if (!patients.some(p => p.id === patientId)) {
+        alert("Please register and select a patient first.");
+        return;
+    }
+
+    if (!doctors.includes(doctor) || !date || !time) {
+        alert("Please complete all appointment fields.");
+        return;
+    }
+
+    if (date < new Date().toLocaleDateString("en-CA")) {
+        alert("Please select today or a future date.");
+        return;
+    }
+
+    const appointment = {
+        id: "AP-" + String(nextAppointmentId).padStart(4, "0"),
+        patientId,
+        doctor,
+        date,
+        time,
+        status: "Booked"
+    };
+
+    appointments.push(appointment);
+
+    if (!saveData()) {
+        appointments.pop();
+        return;
+    }
+
+    nextAppointmentId++;
+    $("appointmentForm").reset();
+    renderAll();
+    alert("Appointment booked successfully!");
+});
+
+$("addPatientBtn").addEventListener("click", () => {
+    resetPatientForm();
+    $("patientFormCard").scrollIntoView({ behavior: "smooth" });
+    $("patientName").focus();
+});
+
+document.querySelectorAll(".nav").forEach(button => {
+    button.addEventListener("click", () => {
+        document.querySelectorAll(".nav").forEach(item =>
+            item.classList.remove("active")
+        );
+
+        button.classList.add("active");
+
+        const target = $(button.dataset.page);
+        if (target) {
+            target.scrollIntoView({ behavior: "smooth" });
+        }
+
+        const headings = {
+            dashboard: "Hospital Dashboard",
+            patients: "Patient Records",
+            doctors: "Doctor Directory",
+            appointments: "Appointment Management"
+        };
+
+        $("pageHeading").textContent = headings[button.dataset.page];
+    });
+});
+
+$("doctorCount").textContent = doctors.length;
+
+const today = new Date();
+const localToday = new Date(
+    today.getTime() - today.getTimezoneOffset() * 60000
+).toISOString().slice(0, 10);
+
+$("appointmentDate").min = localToday;
+
+renderAll();
+</script>
+</body>
+</html>
